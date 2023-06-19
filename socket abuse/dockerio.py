@@ -180,7 +180,7 @@ if __name__ == "__main__":
                 if arg == "UNIX":
                     session.mount("http://", UnixAdapter())
                 elif arg == "TCP":
-                    HOST_ADDR = "https://"+str(sys.argv[2])
+                    HOST_ADDR = sys.argv[2]
                 else:
                     raise Exception("socket?")
                 # stackoverflow.com/questions/26964595/whats-the-correct-way-to-use-a-unix-domain-socket-in-requests-framework
@@ -200,7 +200,11 @@ if __name__ == "__main__":
                     pretty_print(response.json())
                     tty = (sys.argv[5] == "--revsh" or sys.argv[5] == "--it-cmd")
                     response = session.post("{}/exec/{}/start".format(HOST_ADDR ,response.json()["Id"]) , json={"Detach":False,"Tty":tty})
-                    print(response.content)
+                    
+                    try:
+                        pretty_print(response.json())
+                    except ValueError:
+                        print(response)
                     break
                     
                 elif arg == "ps":
