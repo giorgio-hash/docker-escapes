@@ -1,0 +1,30 @@
+In Linux, the `core_pattern` is a system parameter that specifies the pattern for naming core dump files when a process crashes. When a program terminates abnormally, such as due to a segmentation fault or other fatal error, a core dump file is generated. This core dump file contains a snapshot of the program's memory at the time of the crash, which can be useful for debugging and understanding the cause of the error.
+
+The `core_pattern` parameter determines the naming format for these core dump files and also allows for handling them in different ways. By default, the `core_pattern` is set to "core" in most Linux distributions, resulting in core dump files named "core" in the current working directory. However, you can configure the `core_pattern` to specify a different naming format or specify a program to handle the core dumps.
+
+The `core_pattern` parameter is usually set in the `/proc/sys/kernel/core_pattern` file. The format and options available for configuring `core_pattern` can vary depending on the Linux distribution and version. Common options include placeholders like `%p` for the process ID, `%u` for the user ID, `%e` for the executable name, and `%t` for the timestamp.
+
+For example, setting `core_pattern` to `/var/core/core-%e-%p-%t` would result in core dump files being named in the format "core-<executable>-<process ID>-<timestamp>" and stored in the "/var/core" directory.
+
+It's worth noting that the handling of core dumps can also be controlled by other parameters, such as `core_uses_pid` and `fs.suid_dumpable`, which determine whether core dumps include the process ID and whether they are allowed for setuid programs, respectively.
+
+
+
+
+
+
+No, the `core_pattern` parameter itself does not run commands directly. Its primary purpose is to specify the naming pattern for core dump files when a process crashes. However, it is possible to configure the `core_pattern` to invoke a script or a program indirectly for further processing or handling of the core dumps.
+
+In the `core_pattern` parameter, you can specify a pipe (`|`) character followed by a command or script that will be executed with the core dump file passed as input. The core dump data will be streamed to the standard input of the command or script.
+
+For example, suppose you want to run a script called "process_core.sh" whenever a core dump occurs. You can set the `core_pattern` parameter as follows:
+
+```
+|/path/to/process_core.sh %p %u %e
+```
+
+In this example, the core dump file will be passed as input to the "process_core.sh" script, along with additional parameters `%p` (process ID), `%u` (user ID), and `%e` (executable name).
+
+The script can then perform various actions on the core dump file, such as analyzing it, archiving it, or sending it to a remote server for further analysis. The specific behavior of the script or command is determined by how you implement it.
+
+It's important to note that configuring the `core_pattern` to run commands or scripts introduces security considerations, as it allows arbitrary code execution. Exercise caution and ensure that the script or command you specify is secure and trusted.
