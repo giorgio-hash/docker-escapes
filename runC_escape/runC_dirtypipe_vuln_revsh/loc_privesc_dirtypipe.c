@@ -190,7 +190,7 @@ void main(int argc, char **argv){
 
 	orig_bytes = backup_binary(path);
 	printf("[v] backup SUID binary ( %lu bytes ) \n" , sizeof(orig_bytes));
-	if( sizeof(orig_bytes) > ELFCODE_SIZE){
+	if( sizeof(orig_bytes) < ELFCODE_SIZE){
 		perror("[x] ELFCODE_SIZE troppo grande per la binary");
 		exit(EXIT_FAILURE);
 	}
