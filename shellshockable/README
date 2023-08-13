@@ -1,0 +1,15 @@
+ATTENTO A CREARE I CGI IN WINDOWS!!
+
+C'è un bug per cui potrebbe comparire il carattere ^M a fianco a /bin/bash.
+Lo noti se provi a eseguire "./shockme.cgi"
+
+esiste una soluzione ad-hoc per la traduzione 
+https://stackoverflow.com/questions/14219092/bash-script-bin-bashm-bad-interpreter-no-such-file-or-directory
+Qui spiegata al dettaglio:
+https://phoenixnap.com/kb/convert-dos-to-unix
+
+..in ogni caso, meglio se lavori in linux
+
+
+se vuoi far andare python ecco una breve spiegazione (cerca altro):
+https://stackoverflow.com/questions/44871139/how-do-i-run-python-cgi-script-on-apache2-server-on-ubuntu-16-04

