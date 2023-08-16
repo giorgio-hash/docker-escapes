@@ -1,10 +1,8 @@
 import sys, os,time
 import socket,requests,json,pprint
-
 from urllib3.connection import HTTPConnection
 from urllib3.connectionpool import HTTPConnectionPool
 from requests.adapters import HTTPAdapter
-
 
 class UnixConnection(HTTPConnection):
     def __init__(self):
@@ -14,14 +12,12 @@ class UnixConnection(HTTPConnection):
         self.sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
         self.sock.connect("/run/docker.sock")
 
-
 class UnixConnectionPool(HTTPConnectionPool):
     def __init__(self):
         super().__init__("localhost")
 
     def _new_conn(self):
         return UnixConnection()
-
 
 class UnixAdapter(HTTPAdapter):
     def get_connection(self, url, proxies=None):
