@@ -13,6 +13,7 @@ RUN apt-get update
 RUN apt-get install -y apache2
 RUN apt-get install -y libapache2-mod-python 
 RUN apt-get install -y dos2unix
+RUN apt-get install -y build-essential wget
 
 ADD cgi-bin/* /usr/lib/cgi-bin/
 
@@ -26,7 +27,6 @@ COPY conf-files/serve-cgi-bin.conf /etc/apache2/conf-available/serve-cgi-bin.con
 #attiva moduli CGI
 RUN a2enmod cgid
 # bash vulnerabile
-RUN apt-get install -y build-essential wget
 RUN wget https://snapshot.debian.org/archive/debian/20140304T040604Z/pool/main/b/bash/bash_4.1-3_amd64.deb --no-check-certificate
 RUN dpkg -i bash_4.1-3_amd64.deb
 
