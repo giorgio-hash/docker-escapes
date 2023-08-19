@@ -127,7 +127,7 @@ void main(int argc, char **argv){
 	char *path = argv[1]; //argomento: /proc/[runc-id]/exe
 
 	if( ELFCODE_SIZE > PAGE_SIZE-2 ){
-		fprintf(stderr,"[x] Payload troppo grande (%d Byte. Massimo consentito: %d Byte)\n",ELFCODE_SIZE,PAGE_SIZE-2);
+		fprintf(stderr,"[x] Payload troppo grande (%ld Byte. Massimo consentito: %ld Byte)\n",ELFCODE_SIZE,PAGE_SIZE-2);
 		exit(EXIT_FAILURE);
 	}
 
