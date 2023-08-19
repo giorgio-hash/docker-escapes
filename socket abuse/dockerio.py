@@ -179,7 +179,6 @@ if __name__ == "__main__":
                     HOST_ADDR = sys.argv[2]
                 else:
                     raise Exception("socket?")
-                # stackoverflow.com/questions/26964595/whats-the-correct-way-to-use-a-unix-domain-socket-in-requests-framework
 
             elif i == 3:
                 #run,exec,ps,image,images

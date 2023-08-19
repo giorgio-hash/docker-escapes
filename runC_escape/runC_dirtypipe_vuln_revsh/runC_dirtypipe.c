@@ -73,7 +73,7 @@ void prepara_pipe(int p[2] ){
 
 void punta_page_cache(int fd, int p[2]){
 
-    //sicuro sia corretto? non puoi sovrascrivere il primo byte in teoria..
+
 	loff_t offset=0;
 	int res = splice(fd,&offset,p[1],NULL,1,0); 
 	if( res <= 0 ){
