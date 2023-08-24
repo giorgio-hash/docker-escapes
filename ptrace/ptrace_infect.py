@@ -110,10 +110,10 @@ def injection(pid):
         lil_end_word = struct.unpack("<I",shellcode[i:4+i])[0]
         if ptrace(PTRACE_POKETEXT, pid, ctypes.c_void_p(registers.rip+i),lil_end_word) < 0 :
             raise Exception("PTRACE_POKETEXT failed")
-        
 
-    registers.rip += 2  
-    #aggiusto il rip register per puntare alla prossima istruzione
+
+    #registers.rip += 2  # 2 sarebbe la dimensione del opcode di SYSCALL su x86
+    #se il codice dà core dump può essere un bug di PTRACE_DETACH: prova ad aggiustare il rip register per puntare alla prossima istruzione
 
 
 
