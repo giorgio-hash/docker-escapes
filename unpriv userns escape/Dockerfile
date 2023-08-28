@@ -5,10 +5,10 @@ FROM ubuntu:18.04
 
 #USER nonroot
 
-ADD cgesc.sh /
+ADD new_cgesc.sh /
 ADD unshare_and_escape.sh /
 ADD find_root_cgroup.sh /
-RUN chmod 777 cgesc.sh unshare_and_escape.sh find_root_cgroup.sh
+RUN chmod 777 new_cgesc.sh unshare_and_escape.sh find_root_cgroup.sh
 
 ENTRYPOINT [ "./unshare_and_escape.sh"]
 
