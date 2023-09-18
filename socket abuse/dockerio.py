@@ -259,8 +259,7 @@ if __name__ == "__main__":
     finally:
         session.close()
 
-    #l'attach si può ottenere anche semplicemente con socat!! (quest'approccio invece è scomodo)
-    #oppure websockets
+
 
     
         
